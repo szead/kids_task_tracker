@@ -101,13 +101,19 @@ class _TasksListPageState extends State<TasksListPage> {
                       background: slideRightBackground(),
                       secondaryBackground: slideLeftBackground(),
                       onDismissed: (direction) {
-                        if(direction == DismissDirection.endToStart){
+                        if (direction == DismissDirection.endToStart) {
                           setState(() {
                             activeItems.removeAt(index);
                           });
                         }
                       },
                       child: ListTile(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return DetailScreen(item: activeItems[index]);
+                          }));
+                        },
                         leading: Icon(Icons.home),
                         title: Text(activeItems[index]),
                         subtitle: Text(subtitle[index]),
@@ -193,6 +199,27 @@ class _TasksListPageState extends State<TasksListPage> {
           ],
         ),
         alignment: Alignment.centerRight,
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  final String item;
+
+  const DetailScreen({Key key, this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: FlatButton(
+          child: Text(item),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
     );
   }
