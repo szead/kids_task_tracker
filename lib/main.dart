@@ -50,7 +50,9 @@ class TasksListPage extends StatefulWidget {
 }
 
 class _TasksListPageState extends State<TasksListPage> {
-  int _counter = 0;
+  final activeItems = List<String>.generate(10, (i) => "Active Item $i");
+  final subtitle = List<String>.generate(10, (i) => "Subtitle $i");
+  final completedItems = List<String>.generate(10, (i) => "Completed Item $i");
 
   void _addNewTask() {
     setState(() {
@@ -59,17 +61,11 @@ class _TasksListPageState extends State<TasksListPage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final activeItems = List<String>.generate(10, (i) => "Active Item $i");
-    final subtitle = List<String>.generate(10, (i) => "Subtitle $i");
-    final CompletedItems =
-        List<String>.generate(10, (i) => "Completed Item $i");
-
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -93,29 +89,40 @@ class _TasksListPageState extends State<TasksListPage> {
           body: TabBarView(
             children: [
               ListView.separated(
-                padding: const EdgeInsets.all(8),
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.black,
+                  height: 0,
+                  thickness: 0,
                 ),
                 itemCount: activeItems.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text(activeItems[index]),
-                    subtitle: Text(subtitle[index]),
-                  );
+                  return Dismissible(
+                      key: Key(activeItems[index]),
+                      background: slideRightBackground(),
+                      secondaryBackground: slideLeftBackground(),
+                      onDismissed: (direction) {
+                        if(direction == DismissDirection.endToStart){
+                          setState(() {
+                            activeItems.removeAt(index);
+                          });
+                        }
+                      },
+                      child: ListTile(
+                        leading: Icon(Icons.home),
+                        title: Text(activeItems[index]),
+                        subtitle: Text(subtitle[index]),
+                      ));
                 },
               ),
               ListView.separated(
-                padding: const EdgeInsets.all(8),
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.black,
                 ),
-                itemCount: activeItems.length,
+                itemCount: completedItems.length,
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: Icon(Icons.home),
-                    title: Text(CompletedItems[index]),
+                    title: Text(completedItems[index]),
                     subtitle: Text(subtitle[index]),
                   );
                 },
@@ -131,4 +138,62 @@ class _TasksListPageState extends State<TasksListPage> {
   }
 
   void _menuPushed() {}
+
+  Widget slideRightBackground() {
+    return Container(
+      color: Colors.green,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.done,
+              color: Colors.white,
+            ),
+            Text(
+              " Complete",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerLeft,
+      ),
+    );
+  }
+
+  Widget slideLeftBackground() {
+    return Container(
+      color: Colors.red,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            Text(
+              " Delete",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.right,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerRight,
+      ),
+    );
+  }
 }
