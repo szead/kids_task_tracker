@@ -65,43 +65,69 @@ class _TasksListPageState extends State<TasksListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final items = List<String>.generate(10, (i) => "Item $i");
+    final activeItems = List<String>.generate(10, (i) => "Active Item $i");
     final subtitle = List<String>.generate(10, (i) => "Subtitle $i");
+    final CompletedItems =
+        List<String>.generate(10, (i) => "Completed Item $i");
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-        actions: [
-          IconButton(icon: Icon(Icons.list), onPressed: _menuPushed),
-        ],
-      ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(8),
-        separatorBuilder: (context, index) => Divider(
-          color: Colors.black,
-        ),
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: Icon(Icons.home),
-            title: Text(items[index]),
-            subtitle: Text(subtitle[index]),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addNewTask,
-        tooltip: 'Add new task',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            // Here we take the value from the MyHomePage object that was created by
+            // the App.build method, and use it to set our appbar title.
+            bottom: TabBar(tabs: [Tab(text: "ACTIVE"), Tab(text: "COMPLETED")]),
+            title: Text(widget.title),
+            leading: IconButton(icon: Icon(Icons.menu), onPressed: _menuPushed),
+            actions: [
+              IconButton(icon: Icon(Icons.search), onPressed: _menuPushed),
+              IconButton(icon: Icon(Icons.group_add), onPressed: _menuPushed)
+            ],
+          ),
+          body: TabBarView(
+            children: [
+              ListView.separated(
+                padding: const EdgeInsets.all(8),
+                separatorBuilder: (context, index) => Divider(
+                  color: Colors.black,
+                ),
+                itemCount: activeItems.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text(activeItems[index]),
+                    subtitle: Text(subtitle[index]),
+                  );
+                },
+              ),
+              ListView.separated(
+                padding: const EdgeInsets.all(8),
+                separatorBuilder: (context, index) => Divider(
+                  color: Colors.black,
+                ),
+                itemCount: activeItems.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Icon(Icons.home),
+                    title: Text(CompletedItems[index]),
+                    subtitle: Text(subtitle[index]),
+                  );
+                },
+              )
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _addNewTask,
+            tooltip: 'Add new task',
+            child: Icon(Icons.add),
+          ), // This trailing comma makes auto-formatting nicer for build methods.
+        ));
   }
 
   void _menuPushed() {}
