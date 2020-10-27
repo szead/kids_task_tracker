@@ -50,9 +50,9 @@ class TasksListPage extends StatefulWidget {
 }
 
 class _TasksListPageState extends State<TasksListPage> {
-  final activeItems = List<String>.generate(10, (i) => "Active Item $i");
-  final subtitle = List<String>.generate(10, (i) => "Subtitle $i");
-  final completedItems = List<String>.generate(10, (i) => "Completed Item $i");
+  final activeItems = List<String>.generate(10, (i) => "Active Task $i");
+  final childrenName = List<String>.generate(10, (i) => "Kids name $i");
+  final completedItems = List<String>.generate(10, (i) => "Completed Task $i");
 
   void _addNewTask() {
     setState(() {
@@ -116,7 +116,16 @@ class _TasksListPageState extends State<TasksListPage> {
                         },
                         leading: Icon(Icons.home),
                         title: Text(activeItems[index]),
-                        subtitle: Text(subtitle[index]),
+                        subtitle: Text(childrenName[index]),
+                        trailing:
+                        Wrap(
+                          spacing: 0,
+                          children: <Widget>[
+                            IconButton(icon: Icon(Icons.add_circle_outline),onPressed: (){},),
+                            IconButton(icon: Icon(Icons.remove_circle_outline),onPressed: (){},),
+                          ],
+                        ),
+
                       ));
                 },
               ),
@@ -129,7 +138,7 @@ class _TasksListPageState extends State<TasksListPage> {
                   return ListTile(
                     leading: Icon(Icons.home),
                     title: Text(completedItems[index]),
-                    subtitle: Text(subtitle[index]),
+                    subtitle: Text(childrenName[index]),
                   );
                 },
               )
