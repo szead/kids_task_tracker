@@ -82,7 +82,7 @@ class _TasksListPageState extends State<TasksListPage> {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return EditDetailScreen(
-                                items: activeItems, i: index);
+                                items: activeItems, index: index);
                           })).then((value) => setState(() {}));
                         },
                         leading: Icon(Icons.home),
