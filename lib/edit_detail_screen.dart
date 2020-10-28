@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:kids_task_tracker/model/task.dart';
 
 class EditDetailScreen extends StatefulWidget {
-  final List<String> items;
+  final List<Task> tasks;
   final int index;
 
-  EditDetailScreen({Key key, this.items, this.index}) : super(key: key);
+  EditDetailScreen({Key key, this.tasks, this.index}) : super(key: key);
 
   _EditDetailScreenState createState() => _EditDetailScreenState();
 }
@@ -16,7 +17,6 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
   String description = '';
   DateTime date = DateTime.now();
   double maxValue = 0;
-  bool brushedTeeth = false;
   bool enableFeature = false;
   String dropdownValue = 'Alma';
 
@@ -24,13 +24,13 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.items[widget.index]),
+        title: Text("Task"),
         actions: [
           IconButton(icon: Icon(Icons.check), onPressed: () {}),
           IconButton(
               icon: Icon(Icons.delete_forever_outlined),
               onPressed: () {
-                widget.items.removeAt(widget.index);
+                widget.tasks.removeAt(widget.index);
                 Navigator.pop(context);
               }),
         ],
@@ -56,7 +56,7 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                             hintText: 'Enter a task name...',
                             labelText: 'Name',
                           ),
-                          initialValue: widget.items[widget.index],
+                          initialValue: widget.tasks.elementAt(widget.index).taskName,
                           onChanged: (value) {
                             setState(() {
                               taskName = value;

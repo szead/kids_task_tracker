@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'edit_detail_screen.dart';
+import 'model/task.dart';
 
 class TasksListPage extends StatefulWidget {
   TasksListPage({Key key, this.title}) : super(key: key);
@@ -23,6 +24,36 @@ class _TasksListPageState extends State<TasksListPage> {
   final activeItems = List<String>.generate(10, (i) => "Active Task $i");
   final childrenName = List<String>.generate(10, (i) => "Kids name $i");
   final completedItems = List<String>.generate(10, (i) => "Completed Task $i");
+  static final tasksSnapshot = [
+    {
+      "task_name": "Homework",
+      "completed": false,
+      "current_count": 0,
+      "deadline": "2002-02-27T14:00:00-0500",
+      "kid_id": "1",
+      "max_count": 5,
+      "parent_id": "1",
+    },
+    {
+      "task_name": "Cleaning",
+      "completed": false,
+      "current_count": 0,
+      "deadline": "2002-02-27T14:00:00-0500",
+      "kid_id": "1",
+      "max_count": 5,
+      "parent_id": "1",
+    },
+    {
+      "task_name": "Playing",
+      "completed": true,
+      "current_count": 0,
+      "deadline": "2002-02-27T14:00:00-0500",
+      "kid_id": "1",
+      "max_count": 5,
+      "parent_id": "1",
+    }
+  ];
+  List<Task> tasks = tasksSnapshot.map((task) => Task.fromMap(task)).toList();
 
   void _addNewTask() {
     setState(() {
@@ -36,6 +67,9 @@ class _TasksListPageState extends State<TasksListPage> {
 
   @override
   Widget build(BuildContext context) {
+    tasks.forEach((element) {
+      print(element);
+    });
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -59,51 +93,15 @@ class _TasksListPageState extends State<TasksListPage> {
           body: TabBarView(
             children: [
               ListView.separated(
-                separatorBuilder: (context, index) => Divider(
-                  color: Colors.black,
-                  height: 0,
-                  thickness: 0,
-                ),
-                itemCount: activeItems.length,
-                itemBuilder: (context, index) {
-                  return Dismissible(
-                      key: Key(activeItems[index]),
-                      background: slideRightBackground(),
-                      secondaryBackground: slideLeftBackground(),
-                      onDismissed: (direction) {
-                        if (direction == DismissDirection.endToStart) {
-                          setState(() {
-                            activeItems.removeAt(index);
-                          });
-                        }
-                      },
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return EditDetailScreen(
-                                items: activeItems, index: index);
-                          })).then((value) => setState(() {}));
-                        },
-                        leading: Icon(Icons.home),
-                        title: Text(activeItems[index]),
-                        subtitle: Text(childrenName[index]),
-                        trailing: Wrap(
-                          spacing: 0,
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.add_circle_outline),
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.remove_circle_outline),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                      ));
-                },
-              ),
+                  separatorBuilder: (context, index) => Divider(
+                        color: Colors.black,
+                        height: 0,
+                        thickness: 0,
+                      ),
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    return _buildListItem(context, index, tasks);
+                  }),
               ListView.separated(
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.black,
@@ -185,5 +183,42 @@ class _TasksListPageState extends State<TasksListPage> {
         alignment: Alignment.centerRight,
       ),
     );
+  }
+
+  Widget _buildListItem(BuildContext context, int index, List<Task> tasks) {
+    return Dismissible(
+        key: Key(tasks.elementAt(index).taskName),
+        background: slideRightBackground(),
+        secondaryBackground: slideLeftBackground(),
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart) {
+            setState(() {
+              tasks.removeAt(index);
+            });
+          }
+        },
+        child: ListTile(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return EditDetailScreen(tasks: tasks, index: index);
+            })).then((value) => setState(() {}));
+          },
+          leading: Icon(Icons.home),
+          title: Text(tasks.elementAt(index).taskName),
+          subtitle: Text(tasks.elementAt(index).kidId),
+          trailing: Wrap(
+            spacing: 0,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add_circle_outline),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.remove_circle_outline),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ));
   }
 }

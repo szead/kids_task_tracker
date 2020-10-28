@@ -1,9 +1,35 @@
 import 'package:flutter/material.dart';
 import 'task_list_page.dart';
 
+
 void main() {
   runApp(MyApp());
 }
+
+final kidsSnapshot = [
+  {"internal_count": 1, "name": "Filip", "parent_id": "1"},
+  {"internal_count": 2, "name": "Abraham", "votes": "1"},
+  {"internal_count": 3, "name": "Richard", "votes": "2"},
+  {"internal_count": 4, "name": "Ike", "votes": "2"},
+  {"internal_count": 5, "name": "Justin", "votes": "3"},
+];
+
+final parentsSnapshot = [
+  {
+    "family_name": "Bolsak",
+    "gapi_user_ids": ["1", "2"]
+  },
+  {
+    "family_name": "Demon",
+    "gapi_user_ids": ["3", "4"]
+  },
+  {
+    "family_name": "Affleck",
+    "gapi_user_ids": ["5"]
+  },
+];
+
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
