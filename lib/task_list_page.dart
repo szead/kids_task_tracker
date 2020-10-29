@@ -31,8 +31,9 @@ class _TasksListPageState extends State<TasksListPage> {
       "current_count": 0,
       "deadline": "2002-02-27T14:00:00-0500",
       "kid_id": "1",
-      "max_count": 5,
+      "max_count": null,
       "parent_id": "1",
+      "prize": "buzz",
     },
     {
       "task_name": "Cleaning",
@@ -42,6 +43,7 @@ class _TasksListPageState extends State<TasksListPage> {
       "kid_id": "1",
       "max_count": 5,
       "parent_id": "1",
+      "prize": "dino",
     },
     {
       "task_name": "Playing",
@@ -49,8 +51,9 @@ class _TasksListPageState extends State<TasksListPage> {
       "current_count": 0,
       "deadline": "2002-02-27T14:00:00-0500",
       "kid_id": "1",
-      "max_count": 5,
+      "max_count": 1,
       "parent_id": "1",
+      "prize": "toy",
     }
   ];
   List<Task> tasks = tasksSnapshot.map((task) => Task.fromMap(task)).toList();

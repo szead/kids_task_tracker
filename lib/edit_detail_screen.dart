@@ -14,11 +14,34 @@ class EditDetailScreen extends StatefulWidget {
 class _EditDetailScreenState extends State<EditDetailScreen> {
   final _formKey = GlobalKey<FormState>();
   String taskName = '';
-  String description = '';
+  String prize = '';
   DateTime date = DateTime.now();
   double maxValue = 0;
-  bool enableFeature = false;
-  String dropdownValue = 'Alma';
+
+  static final List<String> kidsName = ["Jeremi", "Nero"];
+  static final List<String> types = ["Deadline", "Count"];
+
+  String assigneeDropdownValue = kidsName.first;
+
+  String typeDropdownValue;
+
+  int counter;
+
+  @override
+  void initState() {
+    taskName = widget.tasks.elementAt(widget.index).taskName;
+    date = widget.tasks.elementAt(widget.index).deadline;
+    typeDropdownValue = widget.tasks.elementAt(widget.index).maxCount == null
+        ? types.first
+        : types.last;
+    print(typeDropdownValue);
+    counter = widget.tasks.elementAt(widget.index).maxCount == null
+        ? 0
+        : widget.tasks.elementAt(widget.index).maxCount;
+    print(counter);
+    prize = widget.tasks.elementAt(widget.index).prize;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +49,11 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
       appBar: AppBar(
         title: Text("Task"),
         actions: [
-          IconButton(icon: Icon(Icons.check), onPressed: () {}),
+          IconButton(
+              icon: Icon(Icons.check),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
           IconButton(
               icon: Icon(Icons.delete_forever_outlined),
               onPressed: () {
@@ -56,10 +83,12 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                             hintText: 'Enter a task name...',
                             labelText: 'Name',
                           ),
-                          initialValue: widget.tasks.elementAt(widget.index).taskName,
+                          initialValue: taskName,
                           onChanged: (value) {
                             setState(() {
                               taskName = value;
+                              widget.tasks.elementAt(widget.index).taskName =
+                                  taskName;
                             });
                           },
                         ),
@@ -70,13 +99,15 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                             hintText: 'Enter a prize...',
                             labelText: 'Prize',
                           ),
+                          initialValue: prize,
                           onChanged: (value) {
-                            description = value;
+                            prize = value;
+                            widget.tasks.elementAt(widget.index).prize = prize;
                           },
-                          // maxLines: 5,
+                          maxLines: 2,
                         ),
                         DropdownButton<String>(
-                          value: dropdownValue,
+                          value: assigneeDropdownValue,
                           icon: Icon(Icons.arrow_downward),
                           isExpanded: true,
                           // iconSize: 24,
@@ -88,10 +119,10 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                           ),
                           onChanged: (String newValue) {
                             setState(() {
-                              dropdownValue = newValue;
+                              assigneeDropdownValue = newValue;
                             });
                           },
-                          items: <String>['Alma', 'Two', 'Free', 'Four']
+                          items: kidsName
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -99,14 +130,31 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                             );
                           }).toList(),
                         ),
-                        _FormDatePicker(
-                          date: widget.tasks.elementAt(widget.index).deadline,
-                          onChanged: (value) {
+                        DropdownButton<String>(
+                          value: typeDropdownValue,
+                          icon: Icon(Icons.arrow_downward),
+                          isExpanded: true,
+                          // iconSize: 24,
+                          // elevation: 16,
+                          // style: TextStyle(color: Colors.deepPurple),
+                          underline: Container(
+                            height: 1,
+                            color: Colors.grey,
+                          ),
+                          onChanged: (String newValue) {
                             setState(() {
-                              date = value;
+                              typeDropdownValue = newValue;
                             });
                           },
+                          items: types
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
                         ),
+                        ...getWidgetByType(),
                       ].expand(
                         (widget) => [
                           widget,
@@ -127,6 +175,76 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
       // onPressed: () {
       // Navigator.pop(context, items);
     );
+  }
+
+  List<Widget> getWidgetByType() {
+    List<Widget> widgets = new List<Widget>();
+    switch (typeDropdownValue) {
+      case "Deadline":
+        {
+          widget.tasks.elementAt(widget.index).maxCount = null;
+          widgets.add(_FormDatePicker(
+            date: date,
+            onChanged: (value) {
+              setState(() {
+                date = value;
+                widget.tasks.elementAt(widget.index).deadline = date;
+              });
+            },
+          ));
+        }
+        break;
+      case "Count":
+        {
+          widgets.add(Container(
+            padding: EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(width: 1.0, color: Colors.grey),
+              ),
+            ),
+            child: new Center(
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  new FloatingActionButton(
+                    heroTag: "Remove",
+                    onPressed: () => {
+                      setState(() {
+                        counter--;
+                        widget.tasks.elementAt(widget.index).maxCount = counter;
+                      })
+                    },
+                    child: new Icon(
+                      Icons.remove,
+                      color: Colors.black,
+                    ),
+                    backgroundColor: Colors.white,
+                  ),
+                  new Text(counter.toString(),
+                      style: new TextStyle(fontSize: 35.0)),
+                  new FloatingActionButton(
+                    heroTag: "Add",
+                    onPressed: () => {
+                      setState(() {
+                        counter++;
+                        widget.tasks.elementAt(widget.index).maxCount = counter;
+                      })
+                    },
+                    child: new Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                    backgroundColor: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          ));
+        }
+        break;
+    }
+    return widgets;
   }
 }
 

@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Task {
-  final String taskName;
-  final bool completed;
-  final int currentCount;
-  final DateTime deadline;
-  final String kidId;
-  final int maxCount;
-  final String parentId;
+  String taskName;
+  bool completed;
+  int currentCount;
+  DateTime deadline;
+  String kidId;
+  int maxCount;
+  String parentId;
+  String prize;
 
   final DocumentReference reference;
 
@@ -20,12 +21,13 @@ class Task {
         deadline = DateTime.parse(map['deadline']),
         kidId = map['kid_id'],
         maxCount = map['max_count'],
-        parentId = map['parent_id'];
+        parentId = map['parent_id'],
+        prize = map['prize'];
 
   Task.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
 
   @override
   String toString() =>
-      "Task<$taskName:$completed:$currentCount:$deadline:$kidId:$maxCount:$parentId>";
+      "Task<$taskName:$completed:$currentCount:$deadline:$kidId:$maxCount:$parentId:$prize>";
 }
