@@ -171,9 +171,6 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
           ),
         ),
       ),
-
-      // onPressed: () {
-      // Navigator.pop(context, items);
     );
   }
 

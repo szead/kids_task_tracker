@@ -21,9 +21,6 @@ class TasksListPage extends StatefulWidget {
 }
 
 class _TasksListPageState extends State<TasksListPage> {
-  final activeItems = List<String>.generate(10, (i) => "Active Task $i");
-  final childrenName = List<String>.generate(10, (i) => "Kids name $i");
-  final completedItems = List<String>.generate(10, (i) => "Completed Task $i");
   static final tasksSnapshot = [
     {
       "task_name": "Homework",
@@ -32,6 +29,7 @@ class _TasksListPageState extends State<TasksListPage> {
       "deadline": "2002-02-27T14:00:00-0500",
       "kid_id": "1",
       "max_count": null,
+      "actual_count": null,
       "parent_id": "1",
       "prize": "buzz",
     },
@@ -42,6 +40,7 @@ class _TasksListPageState extends State<TasksListPage> {
       "deadline": "2002-02-27T14:00:00-0500",
       "kid_id": "1",
       "max_count": 5,
+      "actual_count": 0,
       "parent_id": "1",
       "prize": "dino",
     },
@@ -52,20 +51,53 @@ class _TasksListPageState extends State<TasksListPage> {
       "deadline": "2002-02-27T14:00:00-0500",
       "kid_id": "1",
       "max_count": 1,
+      "actual_count": 0,
+      "parent_id": "1",
+      "prize": "toy",
+    },
+    {
+      "task_name": "Hanging the cloths",
+      "completed": false,
+      "current_count": 0,
+      "deadline": "2002-02-27T14:00:00-0500",
+      "kid_id": "1",
+      "max_count": 1,
+      "actual_count": 0,
+      "parent_id": "1",
+      "prize": "toy",
+    },
+    {
+      "task_name": "Hoovering",
+      "completed": false,
+      "current_count": 0,
+      "deadline": "2020-10-30T14:00:00-0500",
+      "kid_id": "1",
+      "max_count": null,
+      "actual_count": null,
+      "parent_id": "1",
+      "prize": "toy",
+    },
+    {
+      "task_name": "Setting the table",
+      "completed": false,
+      "current_count": 0,
+      "deadline": "2002-02-27T14:00:00-0500",
+      "kid_id": "1",
+      "max_count": 1,
+      "actual_count": 0,
       "parent_id": "1",
       "prize": "toy",
     }
   ];
   List<Task> tasks = tasksSnapshot.map((task) => Task.fromMap(task)).toList();
+  List<Task> completedTasks;
+  List<Task> activeTasks;
 
-  void _addNewTask() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-    });
+  @override
+  void initState() {
+    completedTasks = tasks.where((element) => element.completed).toList();
+    activeTasks = tasks.where((element) => !element.completed).toList();
+    super.initState();
   }
 
   @override
@@ -93,6 +125,7 @@ class _TasksListPageState extends State<TasksListPage> {
               IconButton(icon: Icon(Icons.group_add), onPressed: _menuPushed)
             ],
           ),
+          //Active tasks:
           body: TabBarView(
             children: [
               ListView.separated(
@@ -101,31 +134,47 @@ class _TasksListPageState extends State<TasksListPage> {
                         height: 0,
                         thickness: 0,
                       ),
-                  itemCount: tasks.length,
+                  itemCount: activeTasks.length,
                   itemBuilder: (context, index) {
-                    return _buildListItem(context, index, tasks);
+                    return _buildActiveListItem(context, index, activeTasks);
                   }),
+              //Completed Tasks:
               ListView.separated(
                 separatorBuilder: (context, index) => Divider(
                   color: Colors.black,
                 ),
-                itemCount: completedItems.length,
+                itemCount: completedTasks.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text(completedItems[index]),
-                    subtitle: Text(childrenName[index]),
-                  );
+                  return _buildCompletedListItem(
+                      context, index, completedTasks);
                 },
               )
             ],
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: _addNewTask,
+            onPressed: () => _addNewTask(context),
             tooltip: 'Add new task',
             child: Icon(Icons.add),
           ), // This trailing comma makes auto-formatting nicer for build methods.
         ));
+  }
+
+  void _addNewTask(BuildContext context) {
+    activeTasks.add(new Task.fromMap({
+      "task_name": "",
+      "completed": false,
+      "current_count": 0,
+      "deadline": DateTime.now().toString(),
+      "kid_id": "1",
+      "max_count": null,
+      "actual_count": 0,
+      "parent_id": "1",
+      "prize": "",
+    }));
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return EditDetailScreen(
+          tasks: activeTasks, index: activeTasks.length - 1);
+    })).then((value) => setState(() {}));
   }
 
   void _menuPushed() {}
@@ -188,7 +237,8 @@ class _TasksListPageState extends State<TasksListPage> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, int index, List<Task> tasks) {
+  Widget _buildActiveListItem(
+      BuildContext context, int index, List<Task> tasks) {
     return Dismissible(
         key: Key(tasks.elementAt(index).taskName),
         background: slideRightBackground(),
@@ -197,6 +247,12 @@ class _TasksListPageState extends State<TasksListPage> {
           if (direction == DismissDirection.endToStart) {
             setState(() {
               tasks.removeAt(index);
+            });
+          }
+          if (direction == DismissDirection.startToEnd) {
+            setState(() {
+              tasks.elementAt(index).completed = true;
+              completedTasks.add(tasks.removeAt(index));
             });
           }
         },
@@ -211,17 +267,82 @@ class _TasksListPageState extends State<TasksListPage> {
           subtitle: Text(tasks.elementAt(index).kidId),
           trailing: Wrap(
             spacing: 0,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add_circle_outline),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.remove_circle_outline),
-                onPressed: () {},
-              ),
-            ],
+            children: <Widget>[...addCircles(tasks.elementAt(index))],
           ),
         ));
+  }
+
+  Widget _buildCompletedListItem(
+      BuildContext context, int index, List<Task> tasks) {
+    return Dismissible(
+        key: Key(tasks.elementAt(index).taskName),
+        background: slideLeftBackground(),
+        onDismissed: (direction) {
+          setState(() {
+            tasks.removeAt(index);
+          });
+        },
+        child: ListTile(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return EditDetailScreen(tasks: tasks, index: index);
+            })).then((value) => setState(() {}));
+          },
+          leading: Icon(Icons.home),
+          title: Text(tasks.elementAt(index).taskName),
+          subtitle: Text(tasks.elementAt(index).kidId),
+        ));
+  }
+
+  List<Widget> addCircles(Task task) {
+    List<Widget> widgets = new List<Widget>();
+    if (task.maxCount != null) {
+      widgets.add(Text(task.actualCount.toString()));
+      widgets.add(IconButton(
+        icon: Icon(Icons.remove_circle_outline),
+        onPressed: () {
+          setState(() {
+            task.actualCount--;
+          });
+        },
+      ));
+      widgets.add(IconButton(
+        icon: Icon(Icons.add_circle_outline),
+        onPressed: () {
+          setState(() {
+            if (task.actualCount == task.maxCount - 1) {
+              activeTasks.remove(task);
+              completedTasks.add(task);
+              _completed(context,task);
+            } else {
+              task.actualCount++;
+            }
+          });
+        },
+      ));
+    }
+    return widgets;
+  }
+
+  void _completed(BuildContext context, Task task) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return CongratulationScreen(task: task);
+    }));
+  }
+}
+
+class CongratulationScreen extends StatelessWidget {
+  final Task task;
+
+  CongratulationScreen({Key key, this.task}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+
+      ),
+      body: Text("Congratulations your kid is awesome: $task has been completed"),
+    );
   }
 }

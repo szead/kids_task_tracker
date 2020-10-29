@@ -7,6 +7,7 @@ class Task {
   DateTime deadline;
   String kidId;
   int maxCount;
+  int actualCount;
   String parentId;
   String prize;
 
@@ -21,6 +22,7 @@ class Task {
         deadline = DateTime.parse(map['deadline']),
         kidId = map['kid_id'],
         maxCount = map['max_count'],
+        actualCount = map['actual_count'],
         parentId = map['parent_id'],
         prize = map['prize'];
 
