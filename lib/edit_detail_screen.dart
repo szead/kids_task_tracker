@@ -100,7 +100,7 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                           }).toList(),
                         ),
                         _FormDatePicker(
-                          date: date,
+                          date: widget.tasks.elementAt(widget.index).deadline,
                           onChanged: (value) {
                             setState(() {
                               date = value;
