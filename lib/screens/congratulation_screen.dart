@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'model/task.dart';
+import '../model/task.dart';
 
 class CongratulationScreen extends StatelessWidget {
   final Task task;

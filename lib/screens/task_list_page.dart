@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'edit_detail_screen.dart';
-import 'model/task.dart';
+import '../model/task.dart';
 import 'congratulation_screen.dart';
 
 class TasksListPage extends StatefulWidget {
