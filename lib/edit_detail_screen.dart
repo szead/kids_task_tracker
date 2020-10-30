@@ -18,6 +18,8 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
   DateTime date = DateTime.now();
   double maxValue = 0;
 
+  Task actualTask;
+
   static final List<String> kidsName = ["Jeremi", "Nero"];
   static final List<String> types = ["Deadline", "Count"];
 
@@ -29,17 +31,14 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
 
   @override
   void initState() {
-    taskName = widget.tasks.elementAt(widget.index).taskName;
-    date = widget.tasks.elementAt(widget.index).deadline;
-    typeDropdownValue = widget.tasks.elementAt(widget.index).maxCount == null
-        ? types.first
-        : types.last;
+    actualTask = widget.tasks.elementAt(widget.index);
+    taskName = actualTask.taskName;
+    date = actualTask.deadline;
+    typeDropdownValue = actualTask.maxCount == null ? types.first : types.last;
     print(typeDropdownValue);
-    counter = widget.tasks.elementAt(widget.index).maxCount == null
-        ? 0
-        : widget.tasks.elementAt(widget.index).maxCount;
+    counter = actualTask.maxCount == null ? 0 : actualTask.maxCount;
     print(counter);
-    prize = widget.tasks.elementAt(widget.index).prize;
+    prize = actualTask.prize;
     super.initState();
   }
 
@@ -49,7 +48,7 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
       appBar: AppBar(
         title: Text("Task"),
         actions: [
-          ...activeTaskAction(widget.tasks.elementAt(widget.index)),
+          ...activeTaskAction(actualTask),
           IconButton(
               icon: Icon(Icons.delete_forever_outlined),
               onPressed: () {
@@ -103,12 +102,12 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                             hintText: 'Enter a task name...',
                             labelText: 'Name',
                           ),
+                          readOnly: actualTask.completed,
                           initialValue: taskName,
                           onChanged: (value) {
                             setState(() {
                               taskName = value;
-                              widget.tasks.elementAt(widget.index).taskName =
-                                  taskName;
+                              actualTask.taskName = taskName;
                             });
                           },
                         ),
@@ -119,10 +118,11 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                             hintText: 'Enter a prize...',
                             labelText: 'Prize',
                           ),
+                          readOnly: actualTask.completed,
                           initialValue: prize,
                           onChanged: (value) {
                             prize = value;
-                            widget.tasks.elementAt(widget.index).prize = prize;
+                            actualTask.prize = prize;
                           },
                           maxLines: 2,
                         ),
@@ -199,13 +199,13 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
     switch (typeDropdownValue) {
       case "Deadline":
         {
-          widget.tasks.elementAt(widget.index).maxCount = null;
+          actualTask.maxCount = null;
           widgets.add(_FormDatePicker(
             date: date,
             onChanged: (value) {
               setState(() {
                 date = value;
-                widget.tasks.elementAt(widget.index).deadline = date;
+                actualTask.deadline = date;
               });
             },
           ));
@@ -229,7 +229,7 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                     onPressed: () => {
                       setState(() {
                         counter--;
-                        widget.tasks.elementAt(widget.index).maxCount = counter;
+                        actualTask.maxCount = counter;
                       })
                     },
                     child: new Icon(
@@ -245,7 +245,7 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                     onPressed: () => {
                       setState(() {
                         counter++;
-                        widget.tasks.elementAt(widget.index).maxCount = counter;
+                        actualTask.maxCount = counter;
                       })
                     },
                     child: new Icon(
@@ -286,7 +286,7 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                       FlatButton(
                         child: Text("Complete"),
                         onPressed: () {
-                          widget.tasks.elementAt(widget.index).completed = true;
+                          actualTask.completed = true;
                           int count = 0;
                           Navigator.popUntil(context, (route) {
                             return count++ == 2;
