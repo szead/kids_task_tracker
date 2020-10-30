@@ -102,8 +102,13 @@ class _TasksListPageState extends State<TasksListPage> {
 
   @override
   Widget build(BuildContext context) {
-    completedTasks = [...completedTasks,...activeTasks.where((element) => element.completed).toList()];
-    activeTasks = [...activeTasks.where((element) => !element.completed).toList()];
+    completedTasks = [
+      ...completedTasks,
+      ...activeTasks.where((element) => element.completed).toList()
+    ];
+    activeTasks = [
+      ...activeTasks.where((element) => !element.completed).toList()
+    ];
     tasks.forEach((element) {
       print(element);
     });
@@ -117,8 +122,7 @@ class _TasksListPageState extends State<TasksListPage> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            // Here we take the value from the MyHomePage object that was created by
-            // the App.build method, and use it to set our appbar title.
+            centerTitle: true,
             bottom: TabBar(tabs: [Tab(text: "ACTIVE"), Tab(text: "COMPLETED")]),
             title: Text(widget.title),
             leading: IconButton(icon: Icon(Icons.menu), onPressed: _menuPushed),

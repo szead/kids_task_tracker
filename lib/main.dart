@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: TasksListPage(title: 'Tasks list'),
+      home: TasksListPage(title: 'Tasks'),
     );
   }
 }
