@@ -49,37 +49,7 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
       appBar: AppBar(
         title: Text("Task"),
         actions: [
-          IconButton(
-              icon: Icon(Icons.check),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text("Confirm complete"),
-                        content: Text("Would you like to complete this task?"),
-                        actions: [
-                          FlatButton(
-                            child: Text("Cancel"),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                          FlatButton(
-                            child: Text("Complete"),
-                            onPressed: () {
-                              widget.tasks.elementAt(widget.index).completed =
-                                  true;
-                              int count = 0;
-                              Navigator.popUntil(context, (route) {
-                                return count++ == 2;
-                              });
-                            },
-                          )
-                        ],
-                      );
-                    });
-              }),
+          ...activeTaskAction(widget.tasks.elementAt(widget.index)),
           IconButton(
               icon: Icon(Icons.delete_forever_outlined),
               onPressed: () {
@@ -290,6 +260,43 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
           ));
         }
         break;
+    }
+    return widgets;
+  }
+
+  List<Widget> activeTaskAction(Task task) {
+    List<Widget> widgets = new List<Widget>();
+    if (!task.completed) {
+      widgets.add(IconButton(
+          icon: Icon(Icons.check),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Confirm complete"),
+                    content: Text("Would you like to complete this task?"),
+                    actions: [
+                      FlatButton(
+                        child: Text("Cancel"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("Complete"),
+                        onPressed: () {
+                          widget.tasks.elementAt(widget.index).completed = true;
+                          int count = 0;
+                          Navigator.popUntil(context, (route) {
+                            return count++ == 2;
+                          });
+                        },
+                      )
+                    ],
+                  );
+                });
+          }));
     }
     return widgets;
   }

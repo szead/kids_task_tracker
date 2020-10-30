@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'edit_detail_screen.dart';
 import 'model/task.dart';
+import 'congratulation_screen.dart';
 
 class TasksListPage extends StatefulWidget {
   TasksListPage({Key key, this.title}) : super(key: key);
@@ -351,20 +352,5 @@ class _TasksListPageState extends State<TasksListPage> {
     ];
 
     return icons.elementAt(int.parse(task.kidId) - 1);
-  }
-}
-
-class CongratulationScreen extends StatelessWidget {
-  final Task task;
-
-  CongratulationScreen({Key key, this.task}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body:
-          Text("Congratulations your kid is awesome: $task has been completed"),
-    );
   }
 }
