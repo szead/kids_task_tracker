@@ -264,12 +264,20 @@ class _TasksListPageState extends State<TasksListPage> {
           },
           leading: Icon(Icons.home),
           title: Text(tasks.elementAt(index).taskName),
-          subtitle: Text(tasks.elementAt(index).kidId),
+          subtitle: getSubtitle(tasks.elementAt(index)),
           trailing: Wrap(
             spacing: 0,
             children: <Widget>[...addCircles(tasks.elementAt(index))],
           ),
         ));
+  }
+
+  Widget getSubtitle(Task task) {
+    if (task.maxCount != null)
+      return Text("${task.maxCount}/${task.actualCount}");
+    else
+      return Text(
+          "${task.deadline.day}/${task.deadline.month}/${task.deadline.year}");
   }
 
   Widget _buildCompletedListItem(
@@ -297,7 +305,6 @@ class _TasksListPageState extends State<TasksListPage> {
   List<Widget> addCircles(Task task) {
     List<Widget> widgets = new List<Widget>();
     if (task.maxCount != null) {
-      widgets.add(Text(task.actualCount.toString()));
       widgets.add(IconButton(
         icon: Icon(Icons.remove_circle_outline),
         onPressed: () {
@@ -313,7 +320,7 @@ class _TasksListPageState extends State<TasksListPage> {
             if (task.actualCount == task.maxCount - 1) {
               activeTasks.remove(task);
               completedTasks.add(task);
-              _completed(context,task);
+              _completed(context, task);
             } else {
               task.actualCount++;
             }
@@ -339,10 +346,9 @@ class CongratulationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-
-      ),
-      body: Text("Congratulations your kid is awesome: $task has been completed"),
+      appBar: AppBar(),
+      body:
+          Text("Congratulations your kid is awesome: $task has been completed"),
     );
   }
 }
