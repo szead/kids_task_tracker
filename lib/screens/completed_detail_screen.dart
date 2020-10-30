@@ -100,6 +100,16 @@ class CompletedDetailScreen extends StatelessWidget {
         initialValue: task.maxCount.toString(),
       ));
     }
+    widgets.add(TextFormField(
+      decoration: InputDecoration(
+        labelText: "Completed at",
+        filled: true,
+      ),
+      readOnly: true,
+      initialValue:
+          "${task.completedAt.day}/${task.completedAt.month}/${task.completedAt.year}",
+    ));
+
     return widgets;
   }
 }

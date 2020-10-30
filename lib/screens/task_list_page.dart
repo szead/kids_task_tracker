@@ -49,11 +49,12 @@ class _TasksListPageState extends State<TasksListPage> {
     {
       "task_name": "Playing",
       "completed": true,
+      "completed_at": "2002-03-30T14:00:00-0500",
       "current_count": 0,
       "deadline": "2002-02-27T14:00:00-0500",
       "kid_id": "2",
       "max_count": 1,
-      "actual_count": 0,
+      "actual_count": 1,
       "parent_id": "1",
       "prize": "toy",
     },
@@ -260,6 +261,7 @@ class _TasksListPageState extends State<TasksListPage> {
           if (direction == DismissDirection.startToEnd) {
             setState(() {
               tasks.elementAt(index).completed = true;
+              tasks.elementAt(index).completedAt = DateTime.now();
               completedTasks.add(tasks.removeAt(index));
             });
           }
@@ -306,7 +308,7 @@ class _TasksListPageState extends State<TasksListPage> {
           },
           leading: getKidIcon(tasks.elementAt(index)),
           title: Text(tasks.elementAt(index).taskName),
-          subtitle: Text(tasks.elementAt(index).kidId),
+          subtitle: getSubtitle(tasks.elementAt(index)),
         ));
   }
 
@@ -326,6 +328,9 @@ class _TasksListPageState extends State<TasksListPage> {
         onPressed: () {
           setState(() {
             if (task.actualCount == task.maxCount - 1) {
+              task.actualCount++;
+              task.completed = true;
+              task.completedAt = DateTime.now();
               activeTasks.remove(task);
               completedTasks.add(task);
               _completed(context, task);

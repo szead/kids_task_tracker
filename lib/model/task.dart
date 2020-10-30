@@ -10,6 +10,7 @@ class Task {
   int actualCount;
   String parentId;
   String prize;
+  DateTime completedAt;
 
   final DocumentReference reference;
 
@@ -28,7 +29,8 @@ class Task {
         maxCount = map['max_count'],
         actualCount = map['actual_count'],
         parentId = map['parent_id'],
-        prize = map['prize'];
+        prize = map['prize'],
+        completedAt = map['completed_at'] == null ? null : DateTime.parse(map['completed_at']);
 
   Task.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
