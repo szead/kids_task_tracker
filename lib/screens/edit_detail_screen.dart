@@ -126,55 +126,7 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
                           },
                           maxLines: 2,
                         ),
-                        DropdownButton<String>(
-                          value: assigneeDropdownValue,
-                          icon: Icon(Icons.arrow_downward),
-                          isExpanded: true,
-                          // iconSize: 24,
-                          // elevation: 16,
-                          // style: TextStyle(color: Colors.deepPurple),
-                          underline: Container(
-                            height: 1,
-                            color: Colors.grey,
-                          ),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              assigneeDropdownValue = newValue;
-                            });
-                          },
-                          items: kidsName
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                        DropdownButton<String>(
-                          value: typeDropdownValue,
-                          icon: Icon(Icons.arrow_downward),
-                          isExpanded: true,
-                          // iconSize: 24,
-                          // elevation: 16,
-                          // style: TextStyle(color: Colors.deepPurple),
-                          underline: Container(
-                            height: 1,
-                            color: Colors.grey,
-                          ),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              typeDropdownValue = newValue;
-                            });
-                          },
-                          items: types
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                        ...getWidgetByType(),
+                         ...getWidgetByType(),
                       ].expand(
                         (widget) => [
                           widget,

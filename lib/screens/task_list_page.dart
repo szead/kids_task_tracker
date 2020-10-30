@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kids_task_tracker/screens/completed_detail_screen.dart';
 import 'edit_detail_screen.dart';
 import '../model/task.dart';
 import 'congratulation_screen.dart';
@@ -300,7 +301,7 @@ class _TasksListPageState extends State<TasksListPage> {
         child: ListTile(
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return EditDetailScreen(tasks: tasks, index: index);
+              return CompletedDetailScreen(task: tasks.elementAt(index));
             })).then((value) => setState(() {}));
           },
           leading: getKidIcon(tasks.elementAt(index)),

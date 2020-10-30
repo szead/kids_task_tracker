@@ -13,6 +13,10 @@ class Task {
 
   final DocumentReference reference;
 
+  bool isDeadline() {
+    return maxCount == null;
+  }
+
   Task.fromMap(Map<String, dynamic> map, {this.reference})
       : assert(map['task_name'] != null),
         assert(map['parent_id'] != null),
