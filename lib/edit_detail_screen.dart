@@ -52,13 +52,63 @@ class _EditDetailScreenState extends State<EditDetailScreen> {
           IconButton(
               icon: Icon(Icons.check),
               onPressed: () {
-                Navigator.pop(context);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Confirm complete"),
+                        content: Text("Would you like to complete this task?"),
+                        actions: [
+                          FlatButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          FlatButton(
+                            child: Text("Complete"),
+                            onPressed: () {
+                              widget.tasks.elementAt(widget.index).completed =
+                                  true;
+                              int count = 0;
+                              Navigator.popUntil(context, (route) {
+                                return count++ == 2;
+                              });
+                            },
+                          )
+                        ],
+                      );
+                    });
               }),
           IconButton(
               icon: Icon(Icons.delete_forever_outlined),
               onPressed: () {
-                widget.tasks.removeAt(widget.index);
-                Navigator.pop(context);
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Confirm delete"),
+                        content: Text("Would you like to delete this task?"),
+                        actions: [
+                          FlatButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          FlatButton(
+                            child: Text("Delete"),
+                            onPressed: () {
+                              widget.tasks.removeAt(widget.index);
+                              int count = 0;
+                              Navigator.popUntil(context, (route) {
+                                return count++ == 2;
+                              });
+                            },
+                          )
+                        ],
+                      );
+                    });
               }),
         ],
       ),

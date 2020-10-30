@@ -102,6 +102,8 @@ class _TasksListPageState extends State<TasksListPage> {
 
   @override
   Widget build(BuildContext context) {
+    completedTasks = [...completedTasks,...activeTasks.where((element) => element.completed).toList()];
+    activeTasks = [...activeTasks.where((element) => !element.completed).toList()];
     tasks.forEach((element) {
       print(element);
     });
