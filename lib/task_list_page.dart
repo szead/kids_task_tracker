@@ -49,7 +49,7 @@ class _TasksListPageState extends State<TasksListPage> {
       "completed": true,
       "current_count": 0,
       "deadline": "2002-02-27T14:00:00-0500",
-      "kid_id": "1",
+      "kid_id": "2",
       "max_count": 1,
       "actual_count": 0,
       "parent_id": "1",
@@ -60,7 +60,7 @@ class _TasksListPageState extends State<TasksListPage> {
       "completed": false,
       "current_count": 0,
       "deadline": "2002-02-27T14:00:00-0500",
-      "kid_id": "1",
+      "kid_id": "2",
       "max_count": 1,
       "actual_count": 0,
       "parent_id": "1",
@@ -82,7 +82,7 @@ class _TasksListPageState extends State<TasksListPage> {
       "completed": false,
       "current_count": 0,
       "deadline": "2002-02-27T14:00:00-0500",
-      "kid_id": "1",
+      "kid_id": "3",
       "max_count": 1,
       "actual_count": 0,
       "parent_id": "1",
@@ -262,7 +262,7 @@ class _TasksListPageState extends State<TasksListPage> {
               return EditDetailScreen(tasks: tasks, index: index);
             })).then((value) => setState(() {}));
           },
-          leading: Icon(Icons.home),
+          leading: getKidIcon(tasks.elementAt(index)),
           title: Text(tasks.elementAt(index).taskName),
           subtitle: getSubtitle(tasks.elementAt(index)),
           trailing: Wrap(
@@ -296,7 +296,7 @@ class _TasksListPageState extends State<TasksListPage> {
               return EditDetailScreen(tasks: tasks, index: index);
             })).then((value) => setState(() {}));
           },
-          leading: Icon(Icons.home),
+          leading: getKidIcon(tasks.elementAt(index)),
           title: Text(tasks.elementAt(index).taskName),
           subtitle: Text(tasks.elementAt(index).kidId),
         ));
@@ -335,6 +335,16 @@ class _TasksListPageState extends State<TasksListPage> {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return CongratulationScreen(task: task);
     }));
+  }
+
+  Widget getKidIcon(Task task) {
+    List<Icon> icons = [
+      Icon(Icons.account_circle, color: Colors.blue),
+      Icon(Icons.account_circle, color: Colors.black),
+      Icon(Icons.account_circle, color: Colors.green)
+    ];
+
+    return icons.elementAt(int.parse(task.kidId) - 1);
   }
 }
 
